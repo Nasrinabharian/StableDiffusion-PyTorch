@@ -1,5 +1,5 @@
 dataset_params:
-  im_path: 'data/mnist/train/images'
+  im_path: '/Users/abharian/LDM_Project/StableDiffusion-PyTorch/data/mnist/train/images'
   im_channels : 1
   im_size : 28
   name: 'mnist'

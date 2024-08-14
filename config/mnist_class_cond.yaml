@@ -1,7 +1,7 @@
 dataset_params:
-  im_path: 'data/mnist/train/images'
-  im_channels : 1
-  im_size : 28
+  im_path: '/Users/abharian/LDM_Project/StableDiffusion-PyTorch/data/mnist/train/images'
+  im_channels : 3
+  im_size : 128
   name: 'mnist'
 
 diffusion_params:
@@ -24,7 +24,7 @@ ldm_params:
   condition_config:
     condition_types: ['class']
     class_condition_config :
-      num_classes : 10
+      num_classes : 3
       cond_drop_prob : 0.1
 
 autoencoder_params:
@@ -43,8 +43,8 @@ autoencoder_params:
 train_params:
   seed : 1111
   task_name: 'mnist'
-  ldm_batch_size: 64
-  autoencoder_batch_size: 64
+  ldm_batch_size: 1
+  autoencoder_batch_size: 1
   disc_start: 1000
   disc_weight: 0.5
   codebook_weight: 1
@@ -52,9 +52,9 @@ train_params:
   perceptual_weight: 1
   kl_weight: 0.000005
   ldm_epochs : 100
-  autoencoder_epochs : 10
+  autoencoder_epochs : 50 #10
   num_samples : 25
-  num_grid_rows : 5
+  num_grid_rows : 1 #5
   ldm_lr: 0.00001
   autoencoder_lr: 0.0001
   autoencoder_acc_steps : 1
