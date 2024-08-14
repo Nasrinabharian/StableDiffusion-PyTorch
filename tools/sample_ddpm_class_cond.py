@@ -10,6 +10,9 @@ from models.unet_cond_base import Unet
 from models.vqvae import VQVAE
 from scheduler.linear_noise_scheduler import LinearNoiseScheduler
 from utils.config_utils import *
+#2 lines added
+from PIL import Image  
+import PIL  
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -79,6 +82,18 @@ def sample(model, scheduler, train_config, diffusion_model_config,
         
         ims = torch.clamp(ims, -1., 1.).detach().cpu()
         ims = (ims + 1) / 2
+
+        #added lines
+        save_dir = '/Users/abharian/LDM_Project/StableDiffusion-PyTorch/mnist/Generated_Results'
+        os.makedirs(save_dir, exist_ok=True)
+
+        # Iterate through the tensor and save each image separately
+        for j, im in enumerate(ims):
+                img = torchvision.transforms.ToPILImage()(im)
+                img.save(os.path.join(save_dir, f'image_{j+1}.png'))
+        #end of added lines
+
+
         grid = make_grid(ims, nrow=1)
         img = torchvision.transforms.ToPILImage()(grid)
         
@@ -114,12 +129,19 @@ def infer(args):
     model = Unet(im_channels=autoencoder_model_config['z_channels'],
                  model_config=diffusion_model_config).to(device)
     model.eval()
-    if os.path.exists(os.path.join(train_config['task_name'],
-                                   train_config['ldm_ckpt_name'])):
+    #if os.path.exists(os.path.join(train_config['task_name'],
+    #                               train_config['ldm_ckpt_name'])):
+
+    if os.path.exists(os.path.join('/Users/abharian/LDM_Project/StableDiffusion-PyTorch/mnist',
+                                   'ddpm_ckpt_class_cond.pth')):
         print('Loaded unet checkpoint')
-        model.load_state_dict(torch.load(os.path.join(train_config['task_name'],
-                                                      train_config['ldm_ckpt_name']),
+        model.load_state_dict(torch.load(os.path.join('/Users/abharian/LDM_Project/StableDiffusion-PyTorch/mnist',
+                                   'ddpm_ckpt_class_cond.pth'),
                                          map_location=device))
+
+        #model.load_state_dict(torch.load(os.path.join(train_config['task_name'],
+        #                                              train_config['ldm_ckpt_name']),
+        #                                 map_location=device))
     else:
         raise Exception('Model checkpoint {} not found'.format(os.path.join(train_config['task_name'],
                                                                             train_config['ldm_ckpt_name'])))
@@ -155,6 +177,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Arguments for ddpm image generation for class conditional '
                                                  'Mnist generation')
     parser.add_argument('--config', dest='config_path',
-                        default='config/mnist_class_cond.yaml', type=str)
+                        default='/Users/abharian/LDM_Project/StableDiffusion-PyTorch/config/mnist_class_cond.yaml', type=str)
     args = parser.parse_args()
     infer(args)
