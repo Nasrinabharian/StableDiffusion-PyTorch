@@ -1,7 +1,7 @@
 import scipy.io as sio
 import numpy as np
 import os
-
+#(511, 351, 119) is the largest size
 # Specify the directory containing the .mat files
 directory = '/Users/abharian/Downloads/3D_Dataset/train/3'
 destination_directory = '/Users/abharian/Downloads/3D_Dataset/train/Padded_3'
